@@ -92,6 +92,7 @@ port_expander_in::port_expander_in(const std::string& i2c_line, uint8_t i2c_addr
   } 
 
   if(gpiod_line_request_both_edges_events(gpio_line_, "port_expander_in driver") == -1){
+    gpiod_line_release(gpio_line_);
     gpiod_chip_close(gpio_chip_);
     throw std::runtime_error("port_expander_in error: failed to get request both events" + gpio_chip_path);
   }  
@@ -117,6 +118,7 @@ port_expander_in::port_expander_in(port_expander_in&& right) noexcept : port_exp
 
 port_expander_in& port_expander_in::operator=(port_expander_in&& right) noexcept {
   if(this != &right){
+    port_expander_device::operator=(std::move(right));
     if(gpio_line_ != nullptr)
       gpiod_line_release(gpio_line_);
     if(gpio_chip_ != nullptr)

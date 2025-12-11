@@ -5,19 +5,19 @@
 #include "../../lib/gpiod1/include/gpiod.h"
 
 class port_expander_device{
-  protected:
-    int i2c_dev_fd_{-1};
   public:
     port_expander_device() = delete;
     port_expander_device(const std::string& i2c_line, uint8_t i2c_addr);
-
+    
     port_expander_device(const port_expander_device&) = delete;
     port_expander_device& operator=(const port_expander_device&) = delete;
     port_expander_device(port_expander_device&& right) noexcept;
     port_expander_device& operator=(port_expander_device&& right) noexcept;
     ~port_expander_device();
-
+    
     uint8_t read_byte() const;
+  protected:
+    int i2c_dev_fd_{-1};
     
 };
 

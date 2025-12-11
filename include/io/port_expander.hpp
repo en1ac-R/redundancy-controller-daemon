@@ -13,7 +13,7 @@
 /// \brief Base class for working with PCF8574 port expanders.
 /// \details Copying is prohibited; only move semantics are supported.
 class port_expander_device {
-public:
+  public:
     /// \brief Default constructor deleted.
     port_expander_device() = delete;
 
@@ -41,7 +41,7 @@ public:
     /// \return Byte value read from the I2C device.
     uint8_t read_byte() const;
 
-protected:
+  protected:
     /// \brief File descriptor of the I2C device.
     int i2c_dev_fd_{-1}; 
 };
@@ -52,7 +52,7 @@ protected:
 ///          to the I2C device to control outputs such as LEDs. Read operations are
 ///          still available via the base class.
 class port_expander_out : public port_expander_device {
-public:
+  public:
     /// \brief Default constructor deleted.
     port_expander_out() = delete;
 
@@ -81,14 +81,13 @@ public:
     void write_byte(uint8_t byte) const noexcept(false);
 };
 
-
 /// \class port_expander_in
 /// \brief Derived class for working with input pins (buttons) of the PCF8574 port expander.
 /// \details Inherits from port_expander_device. Provides functionality for handling GPIO lines,
 ///          including obtaining an event file descriptor for use with epoll.
 ///          Copying is disabled; only move operations are supported.
 class port_expander_in : public port_expander_device {
-public:
+  public:
     /// \brief Default constructor deleted.
     port_expander_in() = delete;
 
@@ -119,7 +118,7 @@ public:
     /// \return File descriptor of the GPIO line event.
     uint32_t get_gpio_event_fd() const;
 
-private:
+  private:
     /// \brief Pointer to the opened GPIO chip.
     gpiod_chip* gpio_chip_ = nullptr;
 
@@ -129,5 +128,6 @@ private:
     /// \brief File descriptor for the GPIO event.
     int gpio_event_fd_{-1};
 };
+
 
 

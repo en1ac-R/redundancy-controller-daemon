@@ -35,7 +35,7 @@ class port_expander_device {
     port_expander_device& operator=(port_expander_device&& right) noexcept;
 
     /// \brief Destructor.
-    ~port_expander_device();
+    virtual ~port_expander_device();
     
     /// \brief Reads a byte from the I2C device buffer.
     /// \return Byte value read from the I2C device.
@@ -74,7 +74,7 @@ class port_expander_out : public port_expander_device {
     port_expander_out& operator=(port_expander_out&& right) noexcept;
 
     /// \brief Destructor.
-    ~port_expander_out() = default;
+    virtual ~port_expander_out() override  = default ;
 
     /// \brief Writes a byte to the output device (e.g., to set LEDs).
     /// \param byte Byte to write to the I2C device.
@@ -112,7 +112,7 @@ class port_expander_in : public port_expander_device {
     port_expander_in& operator=(port_expander_in&& right) noexcept;
 
     /// \brief Destructor. Releases GPIO resources.
-    ~port_expander_in();
+    virtual ~port_expander_in() override;
 
     /// \brief Gets the GPIO event file descriptor for use with epoll.
     /// \return File descriptor of the GPIO line event.

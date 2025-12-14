@@ -3,11 +3,7 @@
 #include <cstdint>
 #include <string>
 
-#if defined(__x86_64__)
-  #include "../../lib/gpiod1/include/gpiod.h"
-#else 
-  #include <gpiod.h>
-#endif
+#include <gpiod.h>
 
 /// \class port_expander_device
 /// \brief Base class for working with PCF8574 port expanders.

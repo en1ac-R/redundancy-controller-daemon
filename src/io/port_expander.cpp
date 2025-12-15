@@ -1,4 +1,5 @@
-#include "../../include/io/port_expander.hpp"
+#include "io/port_expander.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <gpiod.h>

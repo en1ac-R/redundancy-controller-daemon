@@ -1,10 +1,14 @@
+#include "io/port_expander.hpp"
+
 #include <gpiod.h>
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 int main(){
-     const char* chip_path = "/dev/gpiochip1";
+    port_expander_in pe_in(port_expander_in);
+    
+    const char* chip_path = "/dev/gpiochip1";
     unsigned int line_offset = 141;
 
     // 1. Открываем чип

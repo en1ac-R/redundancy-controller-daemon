@@ -5,12 +5,17 @@
 #include <thread>
 #include <chrono>
 
+enum{I2C_ADDR_PE_IN = 0x27};
+
 int main(){
-    port_expander_in pe_in(port_expander_in);
-    
     const char* chip_path = "/dev/gpiochip1";
     unsigned int line_offset = 141;
+    port_expander_in pe_buttons("/dev/i2c-4", I2C_ADDR_PE_IN, chip_path, line_offset);
 
+    auto event_fd = pe_buttons.get_gpio_event_fd();
+    auto byte = pe_buttons.read_byte();
+
+    
     // 1. Открываем чип
     gpiod_chip* chip = gpiod_chip_open(chip_path);
     if (!chip) {

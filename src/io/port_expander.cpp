@@ -146,4 +146,10 @@ port_expander_in::~port_expander_in(){
     gpiod_chip_close(gpio_chip_);
 }
 
+const gpiod_chip* port_expander_in::get_gpio_chip() const{
+  return gpio_chip_;
+}
 
+const gpiod_line* port_expander_in::get_gpio_line() const{
+  return gpio_line_;
+}

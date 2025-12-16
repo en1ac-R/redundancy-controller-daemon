@@ -114,6 +114,10 @@ class port_expander_in : public port_expander_device {
     /// \return File descriptor of the GPIO line event.
     uint32_t get_gpio_event_fd() const;
 
+    const gpiod_chip* get_gpio_chip() const;
+
+    const gpiod_line* get_gpio_line() const;
+
   private:
     /// \brief Pointer to the opened GPIO chip.
     gpiod_chip* gpio_chip_ = nullptr;

@@ -4,58 +4,66 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <sys/epoll.h>
+#include <unistd.h>
 
 enum{I2C_ADDR_PE_IN = 0x27};
 
 int main(){
-    const char* chip_path = "/dev/gpiochip1";
-    unsigned int line_offset = 141;
-    port_expander_in pe_buttons("/dev/i2c-4", I2C_ADDR_PE_IN, chip_path, line_offset);
+    port_expander_out pe_leds1{"/dev/i2c-4", 0x24};
+    port_expander_out pe_leds2{"/dev/i2c-4", 0x22};
+    port_expander_out pe_leds3{"/dev/i2c-4", 0x21};
 
-    auto event_fd = pe_buttons.get_gpio_event_fd();
-    auto byte = pe_buttons.read_byte();
+    pe_leds1.write_byte(0xFE);
+    pe_leds2.write_byte(0xFF);
+    pe_leds3.write_byte(0xFF);
 
-    
-    // 1. Открываем чип
-    gpiod_chip* chip = gpiod_chip_open(chip_path);
-    if (!chip) {
-        std::cerr << "Failed to open chip: " << chip_path << std::endl;
-        return 1;
+    if(pe_leds1.read_byte() == 0xFF){
+        std::cout << "D1 = 0XFF " << std::endl;
     }
+    std::cout << "Read_byte D1: " << pe_leds1.read_byte() << std::endl; 
+    std::cout << "Read_byte D2: " << pe_leds2.read_byte() << std::endl;
+    std::cout << "Read_byte D3: " << pe_leds3.read_byte() << std::endl;
 
-    // 2. Получаем линию
-    gpiod_line* line = gpiod_chip_get_line(chip, line_offset);
-    if (!line) {
-        std::cerr << "Failed to get line " << line_offset << std::endl;
-        gpiod_chip_close(chip);
-        return 1;
-    }
 
-    // 3. Запрашиваем линию как вход
-    if (gpiod_line_request_input(line, "gpiod-test") < 0) {
-        std::cerr << "Failed to request line as input" << std::endl;
-        gpiod_chip_close(chip);
-        return 1;
-    }
 
-    std::cout << "Monitoring GPIO line " << line_offset
-              << " on " << chip_path << " (press Ctrl+C to stop)\n";
+    port_expander_in pe_buttons{"/dev/i2c-4", 0x26, "/dev/gpiochip1", 141};
+    int gpio_fd = pe_buttons.get_gpio_event_fd();
 
-    // 4. Бесконечный цикл чтения состояния
-    while (true) {
-        int value = gpiod_line_get_value(line);
-        if (value < 0) {
-            std::cerr << "Failed to read value\n";
-        } else {
-            std::cout << "GPIO value: " << value << std::endl;
+    int epoll_fd = epoll_create1(0);
+
+    epoll_event ev{};
+    ev.events = EPOLLIN;
+    ev.data.fd = gpio_fd;
+
+    epoll_ctl(epoll_fd, EPOLL_CTL_ADD, gpio_fd, &ev);
+
+     while (true) {
+        epoll_event event{};
+        int n = epoll_wait(epoll_fd, &event, 1, -1);
+        if (n < 0) {
+            perror("epoll_wait");
+            break;
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    }
+        if (event.events & EPOLLIN) {
+            gpiod_line_event gpio_event{};
+            auto ret = gpiod_line_event_read((gpiod_line*)pe_buttons.get_gpio_line(), &gpio_event);
+            if (ret < 0) {
+                perror("gpiod_line_event_read");
+                break;
+            }
+            usleep(100000);
 
-    // Никогда не дойдет сюда, но по правилам:
-    gpiod_line_release(line);
-    gpiod_chip_close(chip);
+            if (gpio_event.event_type == GPIOD_LINE_EVENT_FALLING_EDGE) {
+                std::cout << "BUTTON PRESSED\n";
+
+            } else if (gpio_event.event_type == GPIOD_LINE_EVENT_RISING_EDGE) {
+                std::cout << "BUTTON RELEASED\n";
+            }
+        }
+    }
+  
 
     return 0;
 }

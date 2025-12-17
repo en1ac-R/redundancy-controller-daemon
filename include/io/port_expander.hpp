@@ -113,10 +113,15 @@ class port_expander_in : public port_expander_device {
     /// \brief Gets the GPIO event file descriptor for use with epoll.
     /// \return File descriptor of the GPIO line event.
     uint32_t get_gpio_event_fd() const;
-
+    
+    /// \brief Gets the GPIO chip object associated with the GPIO interface.
+    /// \return Pointer to the gpiod_chip object.
     const gpiod_chip* get_gpio_chip() const;
 
+    /// \brief Gets the GPIO line object representing the specific GPIO line.
+    /// \return Pointer to the gpiod_line object.
     const gpiod_line* get_gpio_line() const;
+
 
   private:
     /// \brief Pointer to the opened GPIO chip.

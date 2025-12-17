@@ -7,3 +7,5 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/io/)
 
 # Build Tests
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/sysroot_test)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/port_expander_ut)

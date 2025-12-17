@@ -12,7 +12,9 @@ class port_expander_out_test : public ::testing::Test{
   public:
 };
 
-TEST_F(port_expander_out_test, out_test){
+TEST_F(port_expander_out_test, output_test){
+  int* x = new int;
+
   port_expander_out D1("/dev/i2c-4", 0x24);
 
   uint8_t all_green_leds_byte = 0x04 + 0x01 + 0x20 + 0x40;
@@ -22,3 +24,4 @@ TEST_F(port_expander_out_test, out_test){
 
   ASSERT_EQ(D1.read_byte(), all_green_leds_byte);
 }
+

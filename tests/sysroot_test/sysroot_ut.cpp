@@ -2,8 +2,6 @@
 
 #include <gpiod.h>
 #include <iostream>
-#include <thread>
-#include <chrono>
 #include <sys/epoll.h>
 #include <unistd.h>
 

@@ -40,6 +40,8 @@ class port_expander_device {
   protected:
     /// \brief File descriptor of the I2C device.
     int i2c_dev_fd_{-1}; 
+
+    int i2c_addr_{};
 };
 
 /// \class port_expander_out
@@ -74,7 +76,7 @@ class port_expander_out : public port_expander_device {
 
     /// \brief Writes a byte to the output device (e.g., to set LEDs).
     /// \param byte Byte to write to the I2C device.
-    void write_byte(uint8_t byte) const noexcept(false);
+    void write_byte(uint8_t byte) noexcept(false);
 };
 
 /// \class port_expander_in
@@ -122,6 +124,8 @@ class port_expander_in : public port_expander_device {
     /// \return Pointer to the gpiod_line object.
     const gpiod_line* get_gpio_line() const;
 
+    
+
 
   private:
     /// \brief Pointer to the opened GPIO chip.
@@ -132,6 +136,8 @@ class port_expander_in : public port_expander_device {
 
     /// \brief File descriptor for the GPIO event.
     int gpio_event_fd_{-1};
+
+    uint8_t shadow_{0xFF};
 };
 
 

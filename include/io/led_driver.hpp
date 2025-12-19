@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <functional>
 #include <string>
 #include "io/port_expander.hpp"
 

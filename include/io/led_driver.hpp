@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <string>
 #include "io/port_expander.hpp"
 
@@ -25,19 +26,24 @@ struct led_colors{
       green_light_value_(green), red_light_value_(red), orange_light_value_(green|red), no_light_value_(~(green|red)){}
 
     led_colors(uint8_t green, uint8_t red, uint8_t orange, uint8_t no):
-      green_light_value_(green), red_light_value_(red), orange_light_value_(orange), no_light_value_(no){}
+    green_light_value_(green), red_light_value_(red), orange_light_value_(orange), no_light_value_(no){}
 };
 
 class led{
   public:
     led(const std::string& name, port_expander_out* pe_out, const led_colors& colors);
-    void set_color(color cl) const;
-    color get_color() const;
+    void set_color(color cl);
+    color get_current_color() const;
     
+    led(const led&) = delete;
+
+    led(led&&) noexcept = default;
+
   private:
     std::string name_;
     port_expander_out* pe_out_{nullptr};
-    const led_colors colors_;
+    const led_colors colors_;    
+    color current_color{NO};
 };
 
 }

@@ -51,31 +51,30 @@ TEST_F(led_driver_test, simple1){
   std::vector<led_driver::led> led_D4 = init_leds_4(&D4);
 
 
-  for(auto i : led_D1){
-    i.set_color(led_driver::ORANGE);
-  }
-  led_D1[0].set_color(led_driver::GREEN);
-  led_D1[1].set_color(led_driver::RED);
-  led_D1[2].set_color(led_driver::NO);
-  led_D1[3].set_color(led_driver::ORANGE);
+  for(auto &i : led_D1){
+    i.set_color(led_driver::GREEN);
+  }  
 
-
-  for(auto i : led_D2){
-    i.set_color(led_driver::ORANGE);
+  for(auto &i : led_D2){
+    i.set_color(led_driver::RED);
   }
-  led_D2[0].set_color(led_driver::GREEN);
-  led_D2[1].set_color(led_driver::RED);
-  led_D2[2].set_color(led_driver::NO);
-  led_D2[3].set_color(led_driver::ORANGE);
 
-  for(auto i : led_D4){
-    i.set_color(led_driver::NO);
+  for(auto &i : led_D4){
+    i.set_color(led_driver::RED);
   }
-  led_D4[0].set_color(led_driver::GREEN);
-  led_D4[1].set_color(led_driver::RED);
-  led_D4[2].set_color(led_driver::NO);
-  led_D4[3].set_color(led_driver::ORANGE);
+
   
+  for(auto &i : led_D1){
+    ASSERT_EQ(i.get_current_color(), led_driver::GREEN);
+  }
 
+
+  for(auto &i : led_D2){
+    ASSERT_EQ(i.get_current_color(), led_driver::RED);
+  }
+
+  for(auto &i : led_D4){
+    ASSERT_EQ(i.get_current_color(), led_driver::RED);
+  }
 
 }

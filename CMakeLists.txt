@@ -5,14 +5,11 @@ project(redundancy-controller-daemon)
 # Build port expander driver
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/io/)
 
-# Build Tests
+# Build sysroot test
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/sysroot_test)
 
-<<<<<<< HEAD
+# Build port_expander test
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/port_expander_ut)
-=======
 
 # Build led_driver test
-
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/led_driver_ut)
->>>>>>> feature/led_driver

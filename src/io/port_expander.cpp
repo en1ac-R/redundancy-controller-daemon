@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <gpiod.h>
 #include <string>
 #include <sys/ioctl.h>
@@ -9,11 +10,12 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include <linux/i2c-dev.h>
+#include <linux/i2c.h>
 
 // ---------------------------------------------------------------------------------------
 // PORT_EXPANDER_DEIVCE
 
-port_expander_device::port_expander_device(const std::string& i2c_line, uint8_t i2c_addr){
+port_expander_device::port_expander_device(const std::string& i2c_line, uint8_t i2c_addr): i2c_addr_(i2c_addr){
   i2c_dev_fd_ = open(i2c_line.c_str(), O_RDWR);
   if(i2c_dev_fd_ < 0){
     throw std::runtime_error("port_expander_device constructor error : open i2c device error");
@@ -72,7 +74,7 @@ port_expander_out& port_expander_out::operator=(port_expander_out&& right) noexc
   return *this;
 }
 
-void port_expander_out::write_byte(uint8_t byte) const noexcept(false){
+void port_expander_out::write_byte(uint8_t byte) noexcept(false){
   if(write(i2c_dev_fd_, &byte, sizeof(byte)) != 1){
     throw std::runtime_error("port_expander_out::write_byte(uint8_t byte) error : I2C write error");
   }

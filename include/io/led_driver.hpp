@@ -34,10 +34,6 @@ class led{
     void set_color(color cl);
     color get_current_color() const;
     
-    led(const led&) = delete;
-
-    led(led&&) noexcept = default;
-
   private:
     std::string name_;
     port_expander_out* pe_out_{nullptr};

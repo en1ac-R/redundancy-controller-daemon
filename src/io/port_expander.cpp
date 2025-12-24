@@ -94,10 +94,10 @@ port_expander_in::port_expander_in(const std::string& i2c_line, uint8_t i2c_addr
     throw std::runtime_error("port_expander_in error: failed to get gpiod line" + std::to_string(gpio_line_num));
   } 
 
-  if(gpiod_line_request_both_edges_events(gpio_line_, "port_expander_in driver") == -1){
+  if(gpiod_line_request_falling_edge_events(gpio_line_, "port_expander_in driver") == -1){
     gpiod_line_release(gpio_line_);
     gpiod_chip_close(gpio_chip_);
-    throw std::runtime_error("port_expander_in error: failed to get request both events" + gpio_chip_path);
+    throw std::runtime_error("port_expander_in error: failed to get request falling events" + gpio_chip_path);
   }  
   
   gpio_event_fd_ = gpiod_line_event_get_fd(gpio_line_);
